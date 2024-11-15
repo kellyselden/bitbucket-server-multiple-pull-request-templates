@@ -1,14 +1,14 @@
 // ==UserScript==
 // @name         Bitbucket Server Multiple Pull Request Templates
 // @namespace    https://github.com/kellyselden
-// @version      2
+// @version      3
 // @description  Support multiple pull request templates
 // @updateURL    https://raw.githubusercontent.com/kellyselden/bitbucket-server-multiple-pull-request-templates/main/meta.js
 // @downloadURL  https://raw.githubusercontent.com/kellyselden/bitbucket-server-multiple-pull-request-templates/main/user.js
 // @author       Kelly Selden
 // @license      MIT
 // @supportURL   https://github.com/kellyselden/bitbucket-server-multiple-pull-request-templates
-// @match        http*://*bitbucket*/projects/*/repos/*/pull-requests
+// @match        http*://*bitbucket*/projects/*/repos/*/pull-requests*
 // ==/UserScript==
 'use strict';
 
@@ -17,8 +17,10 @@ if (new URL(document.URL).searchParams.get('create') === null) {
   return;
 }
 
+let container = document.getElementById('compare-and-create-container');
+
 function getEditor() {
-  return document.querySelector('.CodeMirror').CodeMirror;
+  return container.querySelector('.CodeMirror').CodeMirror;
 }
 
 function listener(event) {
@@ -42,7 +44,7 @@ const selectId = 'custom-pull-request-templates-select';
 async function run(formBodySide) {
   let templatesPath = '.pull-request-templates';
 
-  let fromBranch = document.querySelector('.ref-lozenge').textContent;
+  let fromBranch = container.querySelector('.ref-lozenge').textContent;
 
   let { project, repo } = document.URL.match(/\/projects\/(?<project>\w+)\/repos\/(?<repo>\S+)\/pull-requests/).groups;
 
@@ -154,7 +156,7 @@ new MutationObserver(mutationsList => {
       }
     }
   }
-}).observe(document.getElementById('compare-and-create-container'), {
+}).observe(container, {
   subtree: true,
   childList: true,
 });
