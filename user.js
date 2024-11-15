@@ -1,13 +1,14 @@
 // ==UserScript==
 // @name         Bitbucket Server Multiple Pull Request Templates
 // @namespace    https://github.com/kellyselden
-// @version      3
+// @version      4
 // @description  Support multiple pull request templates
 // @updateURL    https://raw.githubusercontent.com/kellyselden/bitbucket-server-multiple-pull-request-templates/main/meta.js
 // @downloadURL  https://raw.githubusercontent.com/kellyselden/bitbucket-server-multiple-pull-request-templates/main/user.js
 // @author       Kelly Selden
 // @license      MIT
-// @supportURL   https://github.com/kellyselden/bitbucket-server-multiple-pull-request-templates
+// @source       https://github.com/kellyselden/bitbucket-server-multiple-pull-request-templates
+// @supportURL   https://github.com/kellyselden/bitbucket-server-multiple-pull-request-templates/issues/new
 // @match        http*://*bitbucket*/projects/*/repos/*/pull-requests*
 // ==/UserScript==
 'use strict';
