@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bitbucket Server Multiple Pull Request Templates
 // @namespace    https://github.com/kellyselden
-// @version      4
+// @version      5
 // @description  Support multiple pull request templates
 // @updateURL    https://raw.githubusercontent.com/kellyselden/bitbucket-server-multiple-pull-request-templates/main/meta.js
 // @downloadURL  https://raw.githubusercontent.com/kellyselden/bitbucket-server-multiple-pull-request-templates/main/user.js
@@ -13,8 +13,10 @@
 // ==/UserScript==
 'use strict';
 
+let url = new URL(document.URL);
+
 // The /pull-requests route is shared between list and create.
-if (new URL(document.URL).searchParams.get('create') === null) {
+if (url.searchParams.get('create') === null) {
   return;
 }
 
@@ -45,11 +47,11 @@ const selectId = 'custom-pull-request-templates-select';
 async function run(formBodySide) {
   let templatesPath = '.pull-request-templates';
 
-  let fromBranch = container.querySelector('.ref-lozenge').textContent;
+  let sourceBranch = url.searchParams.get('sourceBranch').replace('refs/heads/', '');
 
   let { project, repo } = document.URL.match(/\/projects\/(?<project>\w+)\/repos\/(?<repo>\S+)\/pull-requests/).groups;
 
-  let response = await fetch(`/rest/api/1.0/projects/${project}/repos/${repo}/files/${templatesPath}?at=${fromBranch}`, {
+  let response = await fetch(`/rest/api/1.0/projects/${project}/repos/${repo}/files/${templatesPath}?at=${sourceBranch}`, {
     headers: {
       'Content-Type': 'application/json',
     },
@@ -70,7 +72,7 @@ async function run(formBodySide) {
   }
 
   let pullRequestTemplates = await Promise.all(data.values.map(async file => {
-    let response = await fetch(`/rest/api/1.0/projects/${project}/repos/${repo}/raw/${templatesPath}/${file}?at=${fromBranch}`);
+    let response = await fetch(`/rest/api/1.0/projects/${project}/repos/${repo}/raw/${templatesPath}/${file}?at=${sourceBranch}`);
 
     let text = await response.text();
 
