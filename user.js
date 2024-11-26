@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bitbucket Server Multiple Pull Request Templates
 // @namespace    https://github.com/kellyselden
-// @version      5
+// @version      6
 // @description  Support multiple pull request templates
 // @updateURL    https://raw.githubusercontent.com/kellyselden/bitbucket-server-multiple-pull-request-templates/main/meta.js
 // @downloadURL  https://raw.githubusercontent.com/kellyselden/bitbucket-server-multiple-pull-request-templates/main/user.js
@@ -71,20 +71,31 @@ async function run(formBodySide) {
     return;
   }
 
-  let pullRequestTemplates = await Promise.all(data.values.map(async file => {
+  let files = data.values.reduce((files, file) => {
+    let name = stripExtension(file);
+
+    if (name.toUpperCase() !== 'README') {
+      files.push({
+        file,
+        name,
+      });
+    }
+
+    return files;
+  }, []);
+
+  let pullRequestTemplates = await Promise.all(files.map(async ({ file, name }) => {
     let response = await fetch(`/rest/api/1.0/projects/${project}/repos/${repo}/raw/${templatesPath}/${file}?at=${sourceBranch}`);
 
     let text = await response.text();
 
     return {
-      file,
+      name,
       text,
-    }
+    };
   }));
 
-  pullRequestTemplates = pullRequestTemplates.reduce((pullRequestTemplates, { file, text }) => {
-    let name = stripExtension(file);
-
+  pullRequestTemplates = pullRequestTemplates.reduce((pullRequestTemplates, { name, text }) => {
     pullRequestTemplates[name] = text;
 
     return pullRequestTemplates;
