@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bitbucket Server Multiple Pull Request Templates
 // @namespace    https://github.com/kellyselden
-// @version      6
+// @version      7
 // @description  Support multiple pull request templates
 // @updateURL    https://raw.githubusercontent.com/kellyselden/bitbucket-server-multiple-pull-request-templates/main/meta.js
 // @downloadURL  https://raw.githubusercontent.com/kellyselden/bitbucket-server-multiple-pull-request-templates/main/user.js
@@ -9,16 +9,11 @@
 // @license      MIT
 // @source       https://github.com/kellyselden/bitbucket-server-multiple-pull-request-templates
 // @supportURL   https://github.com/kellyselden/bitbucket-server-multiple-pull-request-templates/issues/new
-// @match        http*://*bitbucket*/projects/*/repos/*/pull-requests*
+// @include      http*://*bitbucket*/projects/*/repos/*/pull-requests?create*
 // ==/UserScript==
 'use strict';
 
 let url = new URL(document.URL);
-
-// The /pull-requests route is shared between list and create.
-if (url.searchParams.get('create') === null) {
-  return;
-}
 
 let container = document.getElementById('compare-and-create-container');
 
