@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bitbucket Server Multiple Pull Request Templates
 // @namespace    https://github.com/kellyselden
-// @version      7
+// @version      8
 // @description  Support multiple pull request templates
 // @updateURL    https://raw.githubusercontent.com/kellyselden/bitbucket-server-multiple-pull-request-templates/main/meta.js
 // @downloadURL  https://raw.githubusercontent.com/kellyselden/bitbucket-server-multiple-pull-request-templates/main/user.js
@@ -12,8 +12,6 @@
 // @include      http*://*bitbucket*/projects/*/repos/*/pull-requests?create*
 // ==/UserScript==
 'use strict';
-
-let url = new URL(document.URL);
 
 let container = document.getElementById('compare-and-create-container');
 
@@ -42,7 +40,7 @@ const selectId = 'custom-pull-request-templates-select';
 async function run(formBodySide) {
   let templatesPath = '.pull-request-templates';
 
-  let sourceBranch = url.searchParams.get('sourceBranch').replace('refs/heads/', '');
+  let sourceBranch = new URL(document.URL).searchParams.get('sourceBranch').replace('refs/heads/', '');
 
   let { project, repo } = document.URL.match(/\/projects\/(?<project>\w+)\/repos\/(?<repo>\S+)\/pull-requests/).groups;
 
